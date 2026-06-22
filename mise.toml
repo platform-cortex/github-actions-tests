@@ -1,0 +1,47 @@
+[tasks.act]
+description = "Generate the Nektos/ACT Configuration"
+quiet = true
+usage = """
+flag "-f --force" help="Overwrite existing config files"
+"""
+run = """
+#!/usr/bin/env bash
+
+set -e
+
+echo "Generating the Nektos/ACT Configuration files"
+
+if [ ! -d '.act' ]; then
+    mkdir -v '.act'
+fi
+
+# Checking if files exist and --force wasn't used
+if [ -z "$usage_force" ] && [ -f .act/.secrets ] && [ -f .act/.vars ]; then
+    echo "Files already exist. Skipping. Use --force to overwrite."
+    exit 0
+fi
+
+echo "Generating .act/.secrets"
+cat << 'EOF' > .act/.secrets
+# Add your secrets here
+# ABC=ABCD
+EOF
+
+echo "Generating .act/.vars"
+cat << 'EOF' > .act/.vars
+# Add your variables here
+# ABC=ABCD
+EOF
+
+echo "Generating .actrc"
+cat << 'EOF' > .actrc
+-P ubuntu-latest=catthehacker/ubuntu:full-latest
+--pull=false
+--rm
+--secret-file=./.act/.secrets
+--var-file=./.act/.vars
+--detect-event
+EOF
+
+echo "Configuration files created/updated"
+"""

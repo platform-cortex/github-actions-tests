@@ -1,0 +1,6 @@
+-P ubuntu-latest=catthehacker/ubuntu:full-latest
+--pull=false
+--rm
+--secret-file=./.act/.secrets
+--var-file=./.act/.vars
+--detect-event
